@@ -1,0 +1,6 @@
+{
+  "extends": ["plugin:adonis/typescriptApp"],
+  "rules": {
+    "@typescript-eslint/naming-convention": [ "off" ]
+  }
+}
