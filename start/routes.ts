@@ -9,7 +9,7 @@ Route.group(() => {
   Route.get('/', 'UsersController.index')
 
   // Show user
-  Route.get('/:userIdOrEmail', 'UsersController.show')
+  Route.get('/:userIdEmailOrUsername', 'UsersController.show')
 
   // Create user
   Route.post('/', 'UsersController.store')
