@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasManyThrough, HasManyThrough } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany, hasManyThrough, HasManyThrough } from '@ioc:Adonis/Lucid/Orm'
 
 import Person from 'App/Models/Person'
 import Balance from 'App/Models/Balance'
+import UserPurchase from './UserPurchase'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -38,15 +39,18 @@ export default class User extends BaseModel {
   @column({ columnName: 'whitelisted_at' })
   public whitelistedAt?: DateTime
 
-  @column.dateTime({ columnName: 'created_at' })
-  public createdAt: DateTime
-
-  @column.dateTime({ columnName: 'updated_at' })
-  public updatedAt?: DateTime
-
   @hasManyThrough([() => Balance, () => Person], {
     foreignKey: 'account_id',
     throughForeignKey: 'id',
   })
   public balance: HasManyThrough<typeof Balance>
+
+  @hasMany(() => UserPurchase)
+  public purchases: HasMany<typeof UserPurchase>
+
+  @column.dateTime({ columnName: 'created_at' })
+  public createdAt: DateTime
+
+  @column.dateTime({ columnName: 'updated_at' })
+  public updatedAt?: DateTime
 }

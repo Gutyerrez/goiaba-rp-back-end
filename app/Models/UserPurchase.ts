@@ -9,22 +9,13 @@ export default class UserPurchase extends BaseModel {
   public userId: number
 
   @column()
-  public amount: number
-
-  @column()
-  public status:
-  | 'PENDING'
-  | 'CANCELLED'
-  | 'PAID'
-  | 'COMPLETED'
-  | 'CHARGEBACK'
-  | 'REFOUNDED'
+  public guavaAmount: number
 
   @column({ columnName: 'payment_gateway' })
-  public paymentGateway:
-  | 'MERCADO_PAGO'
-  | 'PIC_PAY'
-  | 'PAY_PAL'
+  public paymentGateway: 'MERCADO_PAGO' | 'PIC_PAY' | 'PAY_PAL'
+
+  @column()
+  public status: 'PENDING' | 'CANCELLED' | 'PAID' | 'COMPLETED' | 'CHARGEBACK' | 'REFOUNDED'
 
   @column.dateTime({ columnName: 'created_at' })
   public createdAt: DateTime
