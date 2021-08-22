@@ -9,6 +9,7 @@ import UserNotFoundException from 'App/Exceptions/UserNotFoundException'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import PurchaseNotFoundException from 'App/Exceptions/PurchaseNotFoundException'
 import InternalServerErrorException from 'App/Exceptions/InternalServerErrorException'
+import { MercadoPagoGateway } from 'App/Extensions/Gateways/implementations/MercadoPagoGateway'
 
 export default class UsersPurchasesController {
   public index = async ({ request }: HttpContextContract) => {
@@ -86,17 +87,40 @@ export default class UsersPurchasesController {
         return new BadRequestException()
       }
 
-      await user.related('purchases').create({
-        guavaAmount,
-        paymentGateway,
-        status,
-      })
+      const purchase = new UserPurchase()
+
+      purchase.userId = user.id
+      purchase.guavaAmount = guavaAmount
+      purchase.paymentGateway = paymentGateway
+      purchase.status = status
+
+      var response: {
+        status: number,
+        href?: string
+      } = { status: 500 }
 
       switch (paymentGateway) {
-        case 'MERCADO_PAGO': break
-        case 'PAY_PAL': break
-        case 'PIC_PAY': break
+        case 'MERCADO_PAGO': {
+          const gateway = new MercadoPagoGateway()
+
+          response = {
+            status: 201,
+            href: await gateway.create(purchase),
+          }
+
+          break
+        }
+        case 'PAY_PAL': {
+          break
+        }
+        case 'PIC_PAY': {
+          break
+        }
       }
+
+      await purchase.save()
+
+      return response
     } catch (e) {
       throw new InternalServerErrorException(
         e.message,
