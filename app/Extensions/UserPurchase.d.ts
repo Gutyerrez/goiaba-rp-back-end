@@ -1,7 +1,6 @@
 declare module '@ioc:App/Extensions/UserPurchase' {
   export type UserPurchaseSearchRequest = {
-    id?: number
-    userId?: number
+    idOrUserId?: number
   }
 
   export type UserPurchaseCreationRequest = {

@@ -1,6 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { UserPurchaseCreationRequest, UserPurchaseSearchRequest } from '@ioc:App/Extensions/UserPurchase'
-import { MAX_GUAVA_AMOUNT } from '@ioc:App/Extensions/Constants'
+
+import { MAX_GUAVA_AMOUNT } from 'App/Extensions/Constants'
+
+import { MercadoPagoGateway } from 'App/Extensions/Gateways/implementations/MercadoPagoGateway'
+import {
+  UserPurchaseCreationRequest,
+  UserPurchaseSearchRequest,
+} from '@ioc:App/Extensions/UserPurchase'
 
 import User from 'App/Models/User'
 import UserPurchase from 'App/Models/UserPurchase'
@@ -9,7 +15,6 @@ import UserNotFoundException from 'App/Exceptions/UserNotFoundException'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import PurchaseNotFoundException from 'App/Exceptions/PurchaseNotFoundException'
 import InternalServerErrorException from 'App/Exceptions/InternalServerErrorException'
-import { MercadoPagoGateway } from 'App/Extensions/Gateways/implementations/MercadoPagoGateway'
 
 export default class UsersPurchasesController {
   public index = async ({ request }: HttpContextContract) => {
@@ -35,18 +40,16 @@ export default class UsersPurchasesController {
 
   public show = async ({ params }: HttpContextContract) => {
     try {
-      const { id, userId }: UserPurchaseSearchRequest = params
+      const { idOrUserId }: UserPurchaseSearchRequest = params
 
-      if (!id && !userId) {
+      if (!idOrUserId) {
         throw new BadRequestException()
       }
 
       const purchase = await UserPurchase.findBy(
-        'id',
-        id
+        'id', idOrUserId
       ) ?? await UserPurchase.findBy(
-        'user_id',
-        userId
+        'user_id', idOrUserId
       )
 
       if (!purchase) {

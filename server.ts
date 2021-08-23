@@ -1,9 +1,6 @@
 import { Ignitor } from '@adonisjs/core/build/standalone'
 
 import 'reflect-metadata'
-// import sourceMapSupport from 'source-map-support'
-
-// sourceMapSupport.install({ handleUncaughtExceptions: false })
 
 // Configure payment gateways
 
@@ -14,10 +11,6 @@ import 'reflect-metadata'
 
 // Create instance of ignitor
 
-const HttpServer = new Ignitor(
+new Ignitor(
   __dirname
-).httpServer()
-
-// Start Http Server
-
-HttpServer.start()
+).httpServer().start()

@@ -1,34 +1,47 @@
+import Env from '@ioc:Adonis/Core/Env'
+
+import { verify } from 'jsonwebtoken'
+
+import { Route } from '@ioc:App/Extensions/Router'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-import { Route } from '@ioc:App/Extensions/Route'
+import { PUBLIC_ROUTES } from 'App/Extensions/Constants'
+
+import UnauthorizedException from 'App/Exceptions/UnauthorizedException'
 
 export default class AuthenticationMiddleware {
-  protected _publicRoutes = [
-    {
-      path: new RegExp('^[^/]*/$'),
-      methods: [ 'GET' ],
-    },
-  ] as Route[]
-  protected _userRoutes = [] as Route[]
-
   public handle = async (
-    { request, response }: HttpContextContract,
+    { request }: HttpContextContract,
     next: () => Promise<void>
   ) => {
     const path = request.url()
+    const method = request.intended() as 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-    console.log(`aopa ${path}`)
-    console.log(this._publicRoutes.find(route => route.path.test(path)))
+    let route: Route | undefined
 
-    if (this._publicRoutes.find(route => route.path.test(path)) !== undefined) {
-      await next()
+    if ((route = PUBLIC_ROUTES.find(route =>
+      route.path.test(path) && route.methods.includes(method)
+    ))) {
+      if (!route.authorizationNecessary) {
+        return await next()
+      }
+
+      const authorization = request.headers().authorization
+
+      if (!authorization || !verify(authorization, Env.get('APP_KEY'))) {
+        throw new UnauthorizedException()
+      }
+
+      return await next()
     } else {
-      console.log('não é uma rota publica')
+      const host = request.ip()
+      const authorization = request.headers().authorization
 
-      return response.json({
-        status: 401,
-        message: 'Access unauthorized',
-      })
+      if (!host || !['127.0.0.1'].includes(host) || authorization !== `Bearer ${Env.get('APP_KEY')}`) {
+        throw new UnauthorizedException()
+      }
+
+      return await next()
     }
   }
 }

@@ -45,7 +45,7 @@ export default class AuthenticationController {
           type: 'Bearer',
           token: JWT.sign(
             {
-              user_id: user.id,
+              userId: user.id,
             },
             Env.get('APP_KEY')
           ),

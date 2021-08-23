@@ -3,4 +3,8 @@ declare module '@ioc:App/Extensions/Authentication' {
     username?: string
     password?: string
   }
+
+  export type AuthenticationResponse = {
+    userId: number
+  }
 }

@@ -5,6 +5,9 @@ Route.get('/', 'VersionController.index')
 
 // Users route
 Route.group(() => {
+  // Authentication
+  Route.post('/authentication', 'AuthenticationController.store')
+
   // List all users
   Route.get('/', 'UsersController.index')
 
@@ -14,6 +17,18 @@ Route.group(() => {
   // Create user
   Route.post('/', 'UsersController.store')
 
-  // User authentication route
-  Route.post('/authentication', 'AuthenticationController.store')
+  // Purchases route
+  Route.group(() => {
+    // List purchases
+    Route.get('/', 'UsersPurchasesController.index')
+
+    // Show purchases
+    Route.get('/:idOrUserId', 'UsersPurchasesController.show')
+
+    // Create purchase
+    Route.post('/', 'UsersPurchasesController.store')
+
+    // Update purchase
+    Route.put('/:id', 'UsersPurchasesController.update')
+  }).prefix('/purchases')
 }).prefix('/users')
