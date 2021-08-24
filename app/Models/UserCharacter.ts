@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 
-import Balance from 'App/Models/Balance'
+import UserCharacterBalance from 'App/Models/UserCharacterBalance'
 
-export default class Person extends BaseModel {
+export default class UserCharacter extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
@@ -16,6 +16,6 @@ export default class Person extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @hasOne(() => Balance)
-  public balance: HasOne<typeof Balance>
+  @hasOne(() => UserCharacterBalance)
+  public balance: HasOne<typeof UserCharacterBalance>
 }

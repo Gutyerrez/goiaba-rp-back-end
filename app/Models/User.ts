@@ -1,9 +1,16 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasMany, hasMany, hasManyThrough, HasManyThrough } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  column,
+  HasMany,
+  hasMany,
+  hasManyThrough,
+  HasManyThrough,
+} from '@ioc:Adonis/Lucid/Orm'
 
-import Person from 'App/Models/Person'
-import Balance from 'App/Models/Balance'
-import UserPurchase from './UserPurchase'
+import UserPurchase from 'App/Models/UserPurchase'
+import UserCharacter from 'App/Models/UserCharacter'
+import UserCharacterBalance from 'App/Models/UserCharacterBalance'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -33,17 +40,17 @@ export default class User extends BaseModel {
   @column({ columnName: 'last_address' })
   public lastAddress?: string
 
-  @column({ columnName: 'last_person_id' })
-  public lastPersonId?: number
+  @column({ columnName: 'last_character_id' })
+  public lastCharacterId?: number
 
   @column({ columnName: 'whitelisted_at' })
   public whitelistedAt?: DateTime
 
-  @hasManyThrough([() => Balance, () => Person], {
+  @hasManyThrough([() => UserCharacterBalance, () => UserCharacter], {
     foreignKey: 'account_id',
     throughForeignKey: 'id',
   })
-  public balance: HasManyThrough<typeof Balance>
+  public balance: HasManyThrough<typeof UserCharacterBalance>
 
   @hasMany(() => UserPurchase)
   public purchases: HasMany<typeof UserPurchase>

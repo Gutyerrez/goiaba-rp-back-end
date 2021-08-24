@@ -159,7 +159,7 @@ export default class UsersController {
       user.guavaPoints = guava_points ?? user.guavaPoints
       user.serialId = serial_id ?? user.serialId
       user.lastAddress = last_address ?? user.lastAddress
-      user.lastPersonId = last_person_id ?? user.lastPersonId
+      user.lastCharacterId = last_person_id ?? user.lastCharacterId
       user.whitelistedAt = whitelisted_at ?? user.whitelistedAt
 
       await user.save()
