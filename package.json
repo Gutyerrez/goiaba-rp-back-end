@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "node ace build --production && find -L build -name '*.js.map' -delete",
+    "build": "node ace build --production && find build -regextype posix-awk -regex '(.*.js.map|.*.lock|.*.env|.*.adonisrc.json|.*ace)' -type f -delete",
     "start": "node server.js",
     "dev": "node ace serve --watch",
     "lint": "eslint . --ext=.ts",
