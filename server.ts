@@ -1,4 +1,9 @@
 import 'reflect-metadata'
+import sourceMapSupport from 'source-map-support'
+
+sourceMapSupport.install({
+  handleUncaughtExceptions: false,
+})
 
 import mercadopago from 'mercadopago'
 
