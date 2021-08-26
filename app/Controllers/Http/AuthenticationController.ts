@@ -17,7 +17,9 @@ export default class AuthenticationController {
         throw new BadRequestException()
       }
 
-      const { username, password }: AuthenticationRequest = request.body()
+      const { username, password }: AuthenticationRequest = request.body() instanceof Array
+        ? request.body()[0]
+        : request.body()
 
       if (!username || !password) {
         throw new BadRequestException(
